@@ -1,11 +1,13 @@
+from sqlalchemy.sql.expression import extract
 from fastapi import status
 from datetime import date
-from typing import List
 from sqlalchemy.orm import Session, load_only
 
 from app.v1.models.measurementsModel import Measurements
+from app.v1.models.measureTypesModel import MeasuresType
 from app.v1.schemas.globalSchema import MeasurementsBase, MeasurementsInDB
 from app.v1.exceptions.globalException import GlobalException
+from app.v1.schemas.measurementSchema import MeasurementsFilters
 
 class MeasurementsController(Measurements):
   def __init__(self, model) -> None:
@@ -27,16 +29,37 @@ class MeasurementsController(Measurements):
 
     return db_measurement
 
-  # Get measurements from an User
-  def get_measurements(
-    self, db: Session, user_id: int, measurement_type: int):
+  # Get all measurements from an User
+  def get_measurements(self, db: Session, user_id: int, filters: MeasurementsFilters):
+    if filters.start_date != filters.end_date:
+      return self.get_measurements_by_date(db, user_id, filters)
+    
     return db.query(Measurements)\
+      .join(
+        MeasuresType, 
+        Measurements.type_id == MeasuresType.m_type_id)\
       .filter(
         Measurements.user_id == user_id,
-        Measurements.type_id == measurement_type
-        )\
+        MeasuresType.description == filters.measurement_type)\
       .options(load_only('measure', 'tag', 'created_at'))\
-      .order_by(Measurements.created_at.asc()).all()
+      .order_by(Measurements.created_at.asc())\
+      .limit(filters.limit).all()
+
+  def get_measurements_by_date(self, db: Session, user_id: int, filters: MeasurementsFilters):
+    measurements_list = db.query(Measurements)\
+      .join(
+        MeasuresType, 
+        Measurements.type_id == MeasuresType.m_type_id)\
+      .filter(
+        Measurements.user_id == user_id,
+        MeasuresType.description == filters.measurement_type,
+        Measurements.created_at >= filters.start_date,
+        Measurements.created_at < filters.end_date)\
+      .options(load_only('measure', 'tag', 'created_at'))\
+      .order_by(Measurements.created_at.asc())\
+      .limit(filters.limit).all()
+
+    return measurements_list
 
   # Get only 1 measurement
   def get_measurement(self, db: Session, user_id: int, measurement_id: int):

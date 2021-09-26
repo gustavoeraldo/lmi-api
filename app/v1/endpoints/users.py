@@ -8,7 +8,7 @@ from app.v1.database.mainDB import get_db
 
 router = APIRouter()
 
-@router.get('/', response_model=List[UserInDB])
+@router.get('', response_model=List[UserInDB])
 async def get_all_users(db: Session = Depends(get_db)):
   """
   Return all users
@@ -17,7 +17,7 @@ async def get_all_users(db: Session = Depends(get_db)):
   return listOfUsers
 
 
-@router.post('/', response_model=UserInDB)
+@router.post('', response_model=UserInDB)
 async def create_user(user_in: UserBase, db: Session = Depends(get_db)):
   new_usr = UsersControllers.create_user(db=db, user_in=user_in)
   return new_usr

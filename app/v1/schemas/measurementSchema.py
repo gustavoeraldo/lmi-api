@@ -4,4 +4,6 @@ from typing import Optional
 class MeasurementsFilters(BaseModel):
     page: Optional[int]
     limit: Optional[int]
-    measure_type: Optional[str]
+    measurement_type: Optional[str]
+    start_date: Optional[str]
+    end_date: Optional[str]

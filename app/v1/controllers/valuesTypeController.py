@@ -16,8 +16,9 @@ class MeasureTypesController(MeasuresType):
       raise GlobalException(400, 'Measurement Type already exists.')
 
     db_measure_type = MeasuresType(
-      description = measure_t
+      description = measure_t.lower(),
     )
+    
     try:
       db.add(db_measure_type)
       db.commit()

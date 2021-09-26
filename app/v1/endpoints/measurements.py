@@ -2,26 +2,37 @@ from fastapi import APIRouter, Depends, status, Query
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from typing import Optional
+from datetime import datetime
 
 from app.v1.schemas.globalSchema import MeasurementsBase, MeasurementsInDB
 from app.v1.database.mainDB import get_db
 from app.v1.controllers.measuresController import MeasuresController
+from app.v1.schemas.measurementSchema import MeasurementsFilters
 
 router = APIRouter()
 
 @router.get('/{usr_id}')
 async def read_measurements(
   usr_id: int, 
-  measurement_type: Optional[int] = Query(1, gt=0),
+  measurement_type: Optional[str] = Query('temperature'),
   page: Optional[int] = Query(1, pattern=r'^[0-9]', gt=0),
   limit: Optional[int] = Query(100, pattern=r'^[0-9]', gt=0),
+  start_date: Optional[str] = Query(datetime.now().strftime("%Y-%m-%d")),
+  end_date: Optional[str] = Query(datetime.now().strftime("%Y-%m-%d")),
   db: Session = Depends(get_db)):
   """
   Return all measurements.
   """
 
-  measurements = MeasuresController.get_measurements(
-    db, usr_id, measurement_type)
+  filters = MeasurementsFilters(
+    page = page,
+    limit = limit,
+    measurement_type = measurement_type.lower(),
+    start_date = start_date,
+    end_date = end_date
+  )
+
+  measurements = MeasuresController.get_measurements(db, usr_id, filters)
   return measurements
 
 

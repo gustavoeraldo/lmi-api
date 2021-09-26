@@ -7,7 +7,7 @@ from app.v1.controllers.valuesTypeController import MeasuresTypesC
 
 router = APIRouter()
 
-@router.post('/')
+@router.post('')
 async def add_measure_type(
   measure_type: MeasurementsTypeBase, db: Session = Depends(get_db)):
   """
@@ -17,7 +17,7 @@ async def add_measure_type(
   return new_measure_type
 
 
-@router.get('/')
+@router.get('')
 async def read_measure_types(db: Session = Depends(get_db)):
   measure_type = MeasuresTypesC.get_measure_types(db)
 

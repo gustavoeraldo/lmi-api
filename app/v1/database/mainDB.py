@@ -8,7 +8,6 @@ import os
 
 load_dotenv(find_dotenv())
 
-# SQLACHEMY_DATABASE_URL = 'postgresql+psycopg2://postgres:postgres@localhost:5432/lmi'
 SQLACHEMY_DATABASE_URL = os.getenv('DATABASE_URL')
 
 engine = create_engine(SQLACHEMY_DATABASE_URL, pool_pre_ping=True)
