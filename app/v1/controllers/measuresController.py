@@ -1,13 +1,12 @@
-from sqlalchemy.sql.expression import extract
+from sqlalchemy.orm import Session, load_only
 from fastapi import status
 from datetime import date
-from sqlalchemy.orm import Session, load_only
 
-from app.v1.models.measurementsModel import Measurements
-from app.v1.models.measureTypesModel import MeasuresType
-from app.v1.schemas.globalSchema import MeasurementsBase, MeasurementsInDB
+from app.v1.schemas import MeasurementsBase, MeasurementsInDB, Pagination,\
+  MeasurementsFilters
 from app.v1.exceptions.globalException import GlobalException
-from app.v1.schemas.measurementSchema import MeasurementsFilters
+from app.v1.models import Measurements, MeasuresType
+from app.v1.utils import dynamic_filters
 
 class MeasurementsController(Measurements):
   def __init__(self, model) -> None:
@@ -28,6 +27,13 @@ class MeasurementsController(Measurements):
       raise GlobalException(400, f'Something went wrong trying to insert the data!\nError:{e}')
 
     return db_measurement
+
+  async def get_test_measures(self, db: Session, filters: dict, pagination: Pagination):
+    measurements = db.query(Measurements)
+    measurements = dynamic_filters(Measurements, measurements, filters)\
+      .offset(pagination.page).limit(pagination.limit)
+
+    return measurements.all()
 
   # Get all measurements from an User
   def get_measurements(self, db: Session, user_id: int, filters: MeasurementsFilters):

@@ -8,8 +8,33 @@ from app.v1.schemas.globalSchema import MeasurementsBase, MeasurementsInDB
 from app.v1.database.mainDB import get_db
 from app.v1.controllers.measuresController import MeasuresController
 from app.v1.schemas.measurementSchema import MeasurementsFilters
+from app.v1.schemas.globalSchema import Pagination
 
 router = APIRouter()
+
+@router.get('')
+async def get_all_measurements(*,
+  user_id: Optional[int],
+  measurement_type: Optional[int] = Query(1),
+  tag: Optional[str] = Query('sensor 1'),
+  page: Optional[int] = Query(0, pattern=r'^[0-9]'),
+  limit: Optional[int] = Query(100, pattern=r'^[0-9]', gt=0),
+  db: Session = Depends(get_db)):
+
+  filters = {
+    'user_id': user_id,
+    'type_id': measurement_type,
+    'tag': tag.lower(),
+  }
+
+  pagination = Pagination(
+    page = page,
+    limit = limit,
+  )
+
+  measures = await MeasuresController.\
+    get_test_measures(db, filters, pagination)
+  return measures
 
 @router.get('/{usr_id}')
 async def read_measurements(

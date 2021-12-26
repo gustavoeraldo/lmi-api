@@ -56,3 +56,7 @@ class MeasureTypesDB(MeasurementsTypeBase):
   class Config:
     orm_mode = True
 
+
+class Pagination(BaseModel):
+  page: int = 0
+  limit: int = 100

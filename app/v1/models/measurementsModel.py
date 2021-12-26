@@ -1,5 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, DateTime, Float, String
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from app.v1.database.mainDB import Base
 
@@ -13,3 +14,7 @@ class Measurements(Base):
   tag = Column(String(20), index=True)
   created_at = Column(DateTime(timezone=True), index=True, default=func.now())
   deleted_at = Column(DateTime, index=True)
+
+  # relationships
+  measure_type = relationship("MeasuresType")
+  user = relationship("Users")

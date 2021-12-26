@@ -42,3 +42,18 @@ pipenv lock -r > requirements.txt
 ```bash
 uvicorn main:app --reload
 ```
+
+## Deployment
+
+```bash
+docker-compose up --build -d
+```
+## Image update
+
+```bash
+# creating a Tag
+docker tag lmi-api:v1 docker.pkg.github.com/gustavoeraldo/lmi-api/lmi-api:v1
+
+# Push the image
+docker push docker.pkg.github.com/gustavoeraldo/lmi-api/lmi-api:v1
+```

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from app.v1.database.mainDB import Base
 
@@ -10,4 +10,5 @@ class MeasuresType(Base):
   description = Column(String(100), index=True, nullable=False)
   
   # Relationships
-  measurements = relationship('Measurements')
+  measurements = relationship(
+    'Measurements', backref=backref('value_types', lazy='joined'))

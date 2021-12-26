@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
+# from sqlalchemy.orm import relationship, backref
 
 from app.v1.database.mainDB import Base
 
@@ -9,4 +9,5 @@ class Users(Base):
   usr_id = Column(Integer, primary_key=True, index=True)
   username = Column(String(60), index=True, nullable=False)
 
-  measurements = relationship('Measurements')
+  # measurements = relationship(
+  #   'Measurements', backref=backref('users', lazy='joined'))
