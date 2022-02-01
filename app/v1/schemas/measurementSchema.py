@@ -3,6 +3,14 @@ from typing import Optional
 from datetime import datetime
 
 
+class MeasureType(BaseModel):
+    m_type_id: int
+    description: str
+
+    class Config:
+        orm_mode = True
+
+
 class MeasurementUpdateSchema(BaseModel):
     type_id: Optional[int]
     user_id: Optional[int]
@@ -27,6 +35,8 @@ class MeasurementsInDB(MeasurementsBase):
     created_at: datetime
     deleted_at: Optional[datetime]
 
+    value_types: MeasureType
+
     class Config:
         orm_mode = True
 
@@ -37,3 +47,4 @@ class MeasurementsFilters(BaseModel):
     measurement_type: Optional[str]
     start_date: Optional[str]
     end_date: Optional[str]
+

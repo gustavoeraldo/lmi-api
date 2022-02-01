@@ -10,6 +10,7 @@ from app.v1.controllers.measuresController import MeasuresController
 from app.v1.schemas.measurementSchema import (
     MeasurementsFilters,
     MeasurementUpdateSchema,
+    MeasurementsInDB,
 )
 from app.v1.schemas.globalSchema import Pagination
 
@@ -100,7 +101,9 @@ async def remove_measurement(
 async def update_measurement(
     *, db: Session = Depends(get_db), updated_data: MeasurementUpdateSchema
 ):
-    old_measurement = db.query(Measurements).filter(Measurements.measure_id == 8).first()
+    old_measurement = (
+        db.query(Measurements).filter(Measurements.measure_id == 8).first()
+    )
     return controllers.measurements.update(
         db, db_obj=old_measurement, obj_in=updated_data
     )
