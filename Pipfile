@@ -11,6 +11,7 @@ alembic = "*"
 pydantic = "*"
 uvicorn = "*"
 python-dotenv = "*"
+python-jose = "*"
 
 [dev-packages]
 
