@@ -57,3 +57,25 @@ docker tag lmi-api:v1 docker.pkg.github.com/gustavoeraldo/lmi-api/lmi-api:v1
 # Push the image
 docker push docker.pkg.github.com/gustavoeraldo/lmi-api/lmi-api:v1
 ```
+
+## Alembic
+
+If you are using pipenv:
+
+```bash
+pipenv shell
+
+pipenv install alembic
+
+alembic init migrations
+```
+
+Before create the tables, update alembic [configuration](/migrations/env.py) and then run: 
+```
+alembic revision --autogenerate -m "Added account table"
+
+# or
+alembic revision --autogenerate
+
+alembic upgrade head
+```
