@@ -6,10 +6,11 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import ValidationError
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException
+from typing import List, Dict, Any
 
 
 from app.v1.controllers.controllerBase import CRUDBase
-from app.v1.schemas import UserCreationSchema, UserUpdateSchema
+from app.v1.schemas import UserCreationSchema, UserUpdateSchema, UserBase
 from app.v1.models.usersModel import Users
 from app.v1.controllers.authController import Auth
 from app.v1.schemas import TokenPayload
@@ -21,6 +22,9 @@ oauth2 = OAuth2PasswordBearer(tokenUrl="/login")
 
 
 class UserCRUD(CRUDBase[Users, UserCreationSchema, UserUpdateSchema]):
+    def get_by_any_attr(self, db: Session, data: Dict[str, Any]):
+        return super().get_by_single_attr(db, filter_data=data)
+        
     def get_by_id(self, db: Session, id: Any) -> Users:
         return super().get_resource_by_id(db, id)
 
@@ -31,15 +35,17 @@ class UserCRUD(CRUDBase[Users, UserCreationSchema, UserUpdateSchema]):
         current_user = self.get_by_email(db, email)
 
         if not current_user:
-            raise HTTPException(status_code=404, detail="Email not found or wrong email")
-                
+            raise HTTPException(
+                status_code=404, detail="Email not found or wrong email"
+            )
+
         if not Auth.verify_password(password, current_user.hashed_password):
             raise HTTPException(status_code=400, detail="Wrong password, try again.")
 
         return current_user
 
-    def get_multiple(self):
-        return
+    def get_multiple(self, db: Session) -> List[UserBase]:
+        return super().get_multiple(db=db, limit=10, offset=0)
 
     def create(self, db: Session, *, user_data: UserCreationSchema) -> Optional[Users]:
         new_user = jsonable_encoder(user_data)

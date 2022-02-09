@@ -60,3 +60,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.commit()
 
         return db_obj
+
+    def get_by_single_attr(self, db: Session, filter_data: dict) -> ModelType:
+        [(attr, value)] = filter_data.items()
+        return db.query(self.model).filter(getattr(self.model, attr) == value).first()

@@ -14,6 +14,9 @@ class UserBase(BaseModel):
     last_name: str
     user_type: int
 
+    class Config:
+        orm_mode = True
+
 
 class UserCreationSchema(UserBase):
     password: str

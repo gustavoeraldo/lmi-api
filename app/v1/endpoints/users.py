@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
-from app.v1.schemas import UserUpdateSchema, UserCreationSchema, UserInDB
+from app.v1.schemas import UserUpdateSchema, UserCreationSchema, UserInDB, UserBase
 from app.v1.database.mainDB import get_db
 from app.v1.models.usersModel import Users
 
@@ -11,16 +11,34 @@ from app.v1.controllers.testUser import user
 router = APIRouter()
 
 
-# @router.get("", response_model=List[UserInDB])
-# async def get_all_users(db: Session = Depends(get_db)):
-#     """
-#     Return all users
-#     """
-#     listOfUsers = UsersControllers.get_all_users(db=db)
-#     return listOfUsers
+@router.get(
+    "",
+    response_model=List[UserBase],
+    description="""
+    Return all users
+    """,
+)
+async def get_all_users(
+    db: Session = Depends(get_db), current_user: Users = Depends(user.get_current_user)
+):
+    return user.get_multiple(db=db)
 
 
-@router.post("", response_model=UserInDB, description="")
+@router.get(
+    "/one/{first_name}",
+    # response_model=List[UserBase],
+    description="""
+    Return one user
+    """,
+)
+async def get_all_users(
+    db: Session = Depends(get_db), first_name: Optional[str] = None
+):
+    filter_data = {"first_name": first_name}
+    return user.get_by_any_attr(db, filter_data)
+
+
+@router.post("", response_model=UserBase, description="")
 async def create_user(
     *,
     user_in: UserCreationSchema,
