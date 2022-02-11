@@ -80,3 +80,23 @@ alembic revision --autogenerate
 alembic upgrade head
 ```
 
+## To Do list
+> things that I want to try.
+
+- [ ] Use unity tests
+- [ ] Use NGINX
+- [ ] Use CI/CD with Git actions
+- [ ] Use Celery so send emails
+    - [ ] Use mongo or postgres to save logs. Figure out how to use a custom template with Celery to save data.
+- [ ] Develop dynamic filters
+- [ ] Create a docker yaml file
+- [ ] Watch system logs
+    - [ ] How organize logs
+    - [ ] System monitoring
+- [ ] Describe software architecture patterns used in this project.
+- [ ] Use elastic search engine.
+- [ ] Use Authentication
+    - [ ] Use refresh tokens
+    - [ ] Authentication with cookies
+    - [X] Authentication with JWT using OAuth2
+-[X] Auto generate migrations using alembic.

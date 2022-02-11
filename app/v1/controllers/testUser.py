@@ -2,29 +2,40 @@ from typing import Any, Dict, Optional, Union
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
-
 from pydantic import ValidationError
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException
 from typing import List, Dict, Any
 
-
 from app.v1.controllers.controllerBase import CRUDBase
-from app.v1.schemas import UserCreationSchema, UserUpdateSchema, UserBase
+from app.v1.schemas import (
+    UserCreationSchema,
+    UserUpdateSchema,
+    UserBase,
+    UserFilters,
+    Pagination,
+)
 from app.v1.models.usersModel import Users
 from app.v1.controllers.authController import Auth
 from app.v1.schemas import TokenPayload
 from app.v1.core import settings
 from app.v1.database import get_db
 
-# from app.v1.exceptions.globalException import GlobalException
 oauth2 = OAuth2PasswordBearer(tokenUrl="/login")
 
 
-class UserCRUD(CRUDBase[Users, UserCreationSchema, UserUpdateSchema]):
-    def get_by_any_attr(self, db: Session, data: Dict[str, Any]):
+class UserCRUD(CRUDBase[Users, UserCreationSchema, UserUpdateSchema, UserFilters]):
+    def get_by_any_attr(self, db: Session, data: Dict[str, Any]) -> Optional[Users]:
         return super().get_by_single_attr(db, filter_data=data)
-        
+
+    def get_by_multiple_attributes(
+        self,
+        db: Session,
+        filters: Union[UserFilters, Dict[str, Any]],
+        pagination: Pagination,
+    ) -> Optional[List[Users]]:
+        return super().get_by_multiple_filters(db, filters, pagination)
+
     def get_by_id(self, db: Session, id: Any) -> Users:
         return super().get_resource_by_id(db, id)
 
@@ -63,8 +74,8 @@ class UserCRUD(CRUDBase[Users, UserCreationSchema, UserUpdateSchema]):
         db_obj: Users,
         obj_in: Union[UserUpdateSchema, Dict[str, Any]]
     ) -> Users:
-        my_user = db.query(self.model).filter(self.model.usr_id == 8).first()
-        return super().update(db, db_obj=my_user, obj_in=obj_in)
+
+        return super().update(db, db_obj=db_obj, obj_in=obj_in)
 
     def remove(self):
         return
@@ -79,6 +90,13 @@ class UserCRUD(CRUDBase[Users, UserCreationSchema, UserUpdateSchema]):
             raise HTTPException(status_code=404, detail="User not found.")
 
         user_db = self.get_by_id(db, id=token_data.id)
+
+        print(user_db.is_active)
+        if not user_db.is_active:
+            raise HTTPException(
+                status_code=423,
+                detail="User is not active. Request an activation for a ADMIN user.",
+            )
 
         if not user_db:
             raise HTTPException(status_code=404, detail="User not found.")

@@ -11,5 +11,6 @@ from .userSchema import (
     UserUpdateSchema,
     UserCreationSchema,
     UserLoginSchema,
+    UserFilters,
 )
 from .tokenSchema import TokenSchema, TokenPayload

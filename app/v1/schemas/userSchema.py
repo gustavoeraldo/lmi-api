@@ -26,9 +26,11 @@ class UserUpdateSchema(BaseModel):
     email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]
-    user_type: Optional[int]
     is_active: Optional[bool]
-    updated_at: Optional[datetime]
+
+
+class UserFilters(UserUpdateSchema):
+    pass
 
 
 class UserInDB(UserBase):
