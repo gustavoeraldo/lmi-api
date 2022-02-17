@@ -47,7 +47,8 @@ class UserCRUD(CRUDBase[Users, UserCreationSchema, UserUpdateSchema, UserFilters
 
         if not current_user:
             raise HTTPException(
-                status_code=404, detail="Email not found or wrong email"
+                status_code=404,
+                detail="There is no user with the given email address or wrong email",
             )
 
         if not Auth.verify_password(password, current_user.hashed_password):

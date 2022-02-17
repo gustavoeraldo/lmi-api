@@ -100,3 +100,16 @@ alembic upgrade head
     - [ ] Authentication with cookies
     - [X] Authentication with JWT using OAuth2
 -[X] Auto generate migrations using alembic.
+
+
+## Testing
+
+```bash
+pytest
+
+# or
+pytest --cov=lmi-api tests/
+
+# generating html report from coverage
+coverage html
+```

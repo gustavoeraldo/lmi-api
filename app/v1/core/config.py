@@ -43,5 +43,12 @@ class Settings(BaseSettings):
     # class Config:
     #     case_sensitive = True
 
+    # TEST VARIABLES
+    TEST_EMAIL_ADMIN = os.getenv("TEST_EMAIL_ADMIN")
+    TEST_PASSWORD = os.getenv("TEST_PASSWORD")
+
+    TEST_EMAIL_STUDENT = os.getenv("TEST_EMAIL_STUDENT")
+    TEST_STUDENT_PASSWORD = os.getenv("TEST_STUDENT_PASSWORD")
+
 
 settings = Settings()
