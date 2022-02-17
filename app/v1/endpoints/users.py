@@ -1,5 +1,5 @@
 from http.client import HTTPException
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from pydantic import EmailStr
@@ -10,17 +10,17 @@ from app.v1.controllers.testUser import user
 from app.v1.schemas import (
     UserUpdateSchema,
     UserCreationSchema,
-    UserInDB,
     UserBase,
     Pagination,
-    UserFilters
+    UserFilters,
+    UserDefaultResponse,
 )
 
 router = APIRouter()
 
 @router.get(
     "",
-    response_model=Optional[List[UserBase]],
+    response_model=Optional[List[UserDefaultResponse]],
     description=("""
     Return multiple users. You can apply several filters to 
     retrive users information.
@@ -51,9 +51,9 @@ async def get_all_users(
     )
 
     pagination = Pagination(page=offset, limit=limit)
-
+    # users = user.get_by_multiple_attributes(db, filters, pagination)
+    
     return user.get_by_multiple_attributes(db, filters, pagination)
-
 
 @router.post("", response_model=UserBase, description="")
 async def create_user(
@@ -97,6 +97,6 @@ async def update_user(
     return user.update(db, db_obj=old_user, obj_in=user_in)
 
 
-@router.patch("/{user_id}")
-async def update_user_type():
-    return
+# @router.patch("/{user_id}")
+# async def update_user_type():
+#     return

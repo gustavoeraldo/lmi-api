@@ -22,6 +22,12 @@ class UserCreationSchema(UserBase):
     password: str
 
 
+class UserDefaultResponse(UserBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
 class UserUpdateSchema(BaseModel):
     email: Optional[EmailStr]
     first_name: Optional[str]

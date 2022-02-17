@@ -4,7 +4,7 @@ from .measurementSchema import (
     MeasurementsInDB,
     MeasurementUpdateSchema,
 )
-from .globalSchema import Pagination
+from .globalSchema import Pagination, BatchResourceOutput
 from .userSchema import (
     UserBase,
     UserInDB,
@@ -12,5 +12,6 @@ from .userSchema import (
     UserCreationSchema,
     UserLoginSchema,
     UserFilters,
+    UserDefaultResponse,
 )
 from .tokenSchema import TokenSchema, TokenPayload

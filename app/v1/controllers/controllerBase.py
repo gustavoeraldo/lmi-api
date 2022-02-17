@@ -83,9 +83,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, FilterSche
                 query = query.filter(
                     func.lower(getattr(self.model, attr)).like(f"%{value.lower()}%")
                 )
-            if isinstance(value, int):
+            elif isinstance(value, (bool, int)):
                 query = query.filter(getattr(self.model, attr) == value)
-            if isinstance(value, list):
+            elif isinstance(value, list):
                 query = query.filter(getattr(self.model, attr).in_(value))
 
         query = query.limit(pagination.limit).offset(pagination.page)
