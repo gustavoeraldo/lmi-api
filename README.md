@@ -108,7 +108,7 @@ alembic upgrade head
 pytest
 
 # or
-pytest --cov=lmi-api tests/
+pytest --cov=app tests/
 
 # generating html report from coverage
 coverage html

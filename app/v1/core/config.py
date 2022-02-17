@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Optional
 from pydantic import AnyHttpUrl, BaseSettings, HttpUrl, PostgresDsn, validator
 from dotenv import find_dotenv, load_dotenv
 import os
