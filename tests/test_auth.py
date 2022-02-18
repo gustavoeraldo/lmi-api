@@ -28,3 +28,14 @@ def test_wrong_password():
     response = client.post(url="/token", json=body)
     assert response.status_code == 400
     assert response.json() == {"detail": "Wrong password, try again."}
+
+def test_get_successfully_token():
+    body = {
+        "email": settings.TEST_EMAIL_ADMIN,
+        "password": settings.TEST_PASSWORD,
+    }
+
+    response = client.post(url="/token", json=body)
+    assert response.status_code == 200
+    assert response.json()["access_token"]
+    assert response.json()["token_type"]
