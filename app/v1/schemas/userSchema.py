@@ -1,10 +1,51 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from typing import Optional
+from datetime import datetime
+
+
+class UserLoginSchema(BaseModel):
+    email: EmailStr
+    password: str = "yourpassword"
+
 
 class UserBase(BaseModel):
-  username: str
+    email: EmailStr
+    first_name: str
+    last_name: str
+    user_type: int
+
+    class Config:
+        orm_mode = True
+
+
+class UserCreationSchema(UserBase):
+    password: str
+
+
+class UserDefaultResponse(UserBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class UserUpdateSchema(BaseModel):
+    email: Optional[EmailStr]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    is_active: Optional[bool]
+
+
+class UserFilters(UserUpdateSchema):
+    pass
+
 
 class UserInDB(UserBase):
-  usr_id: int
+    id: int
+    hashed_password: str
+    is_active: bool
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
+    deleted_at: Optional[datetime]
 
-  class Config:
-    orm_mode = True
+    class Config:
+        orm_mode = True

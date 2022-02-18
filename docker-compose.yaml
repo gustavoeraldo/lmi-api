@@ -10,6 +10,6 @@ services:
     stop_grace_period: "3s"
     image: "${IMAGE_NAME}:${SERVER_VERSION}"
     ports:
-      - "${DOCKER_WEB_PORT_FORWARD}:8000"
+      - "${DOCKER_WEB_PORT_FORWARD}:${APPLICATION_WEB_PORT}"
 
     container_name: "${CONTAINER_NAME}"
